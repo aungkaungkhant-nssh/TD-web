@@ -2,24 +2,26 @@
 import { TodoProps } from "@/propTypes/todos/todo";
 import { Circle, CircleCheckBig, Edit, Import, Trash } from "lucide-react";
 import Card from "../cards/Card";
-import { deleteTodo, updateTodo } from "@/server/action/todo";
 import Input from "../ui/Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TodoSchema, TodoSchemaType } from "@/types/todoSchema";
 import Button from "../ui/Button";
+import { deleteTodo, updateTodo } from "@/server/action/todos/todo";
 
 export default function TodoItem({ todo }: TodoProps) {
+
     const [isEditMode, setIsEditMode] = useState(false);
     const handleComplete = () => {
         updateTodo({ ...todo, is_complete: !todo.is_complete });
     }
-    const handleDelete = async () => {
-        await deleteTodo(todo.id)
+    const handleDelete = () => {
+        deleteTodo({ id: todo.id })
     }
 
     const {
+        setValue,
         control,
         handleSubmit,
         formState: { errors },
@@ -33,6 +35,11 @@ export default function TodoItem({ todo }: TodoProps) {
             is_complete: todo.is_complete
         },
     });
+
+    useEffect(() => {
+        setValue("is_complete", todo.is_complete);
+        setValue("title", todo.title);
+    }, [todo])
 
     const onSubmit = async (data: TodoSchemaType) => {
         todo.title = data.title;

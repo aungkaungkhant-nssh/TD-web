@@ -1,8 +1,9 @@
-import { apiRequest } from "@/utils/apiClient";
+
 import TodoLists from "../components/todos/TodoLists";
+import { getTodos } from "@/server/action/todos/todo";
 
 export default async function Home() {
-  const todos = await apiRequest("/api/todos");
+  const todos = await getTodos();
 
   return (
     <main className="h-screen flex items-center justify-center w-full">

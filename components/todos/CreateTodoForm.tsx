@@ -4,7 +4,7 @@ import Button from "../ui/Button";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TodoSchema, TodoSchemaType } from "@/types/todoSchema";
-import { createTodo } from "@/server/action/todo";
+import { createTodo } from "@/server/action/todos/todo";
 
 export default function CreateTodoForm() {
     const {
@@ -12,17 +12,18 @@ export default function CreateTodoForm() {
         control,
         handleSubmit,
         formState: { errors },
-    } = useForm<Omit<TodoSchemaType, "is_complete">>({
+    } = useForm<TodoSchemaType>({
         resolver: zodResolver(
-            TodoSchema.omit({ is_complete: true })
+            TodoSchema
         ),
         defaultValues: {
             title: "",
+            is_complete: false
         },
     });
 
-    const onSubmit = async (data: Omit<TodoSchemaType, "is_complete">) => {
-        createTodo(data);
+    const onSubmit = async (data: TodoSchemaType) => {
+        await createTodo(data);
         reset({
             title: ""
         });
