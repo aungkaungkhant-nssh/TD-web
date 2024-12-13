@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { PrismaClient } from '@prisma/client';
 import { TodoSchemaType } from "@/types/todoSchema";
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 
 export const getTodos = async () => {
