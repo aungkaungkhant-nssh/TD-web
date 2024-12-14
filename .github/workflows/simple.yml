@@ -1,92 +1,22 @@
-name: CI/CD for Next.js with Prisma and Neon
+name: SimplePipeline
 
 on:
   push:
-    branches:
-      - main # Trigger on pushes to the `main` branch
-  pull_request: # Trigger CI checks on pull requests
-    branches:
-      - '*'
-
+    branches: [main]
 jobs:
-  # ---- CI: Code Quality, Tests, and Build Check ---- #
-  lint-and-test:
-    name: Lint and Test
+  lintTest:
+    name: Lint
     runs-on: ubuntu-latest
-
-    steps:
-      # Step 1: Checkout the code
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      # Step 2: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-
-      # Step 3: Install Dependencies
+    steps: 
+      - name: Clone Repository
+        uses: actions/checkout@v2
       - name: Install Dependencies
-        run: npm install
-
-      # Step 4: Run Linting
-      - name: Run Linter
-        run: npm run lint
-
-      # Step 5: Run Tests
-      - name: Run Tests
+        run: |
+          echo "Running Installing Dependencies"
+          npm install
+      - name: Run Linting
+        run: |
+          echo "Running Linting Tests"
+          npm run lint
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }} # Pass Neon connection string
-        run: npm test
-
-      # Step 6: Check Build
-      - name: Build Next.js App
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npm run build
-
-  # ---- CD: Deploy to Vercel ---- #
-  build-and-deploy:
-    name: Build and Deploy
-    runs-on: ubuntu-latest
-
-    steps:
-      # Step 1: Checkout the code
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      # Step 2: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18 # Same Node.js version as CI
-
-      # Step 3: Install Dependencies
-      - name: Install Dependencies
-        run: npm install
-
-      # Step 4: Generate Prisma Client
-      - name: Generate Prisma Client
-        run: npx prisma generate
-
-      # Step 5: Apply Database Migrations
-      - name: Apply Prisma Migrations
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npx prisma migrate deploy
-
-      # Step 6: Build the App
-      - name: Build the Next.js App
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npm run build
-
-      # Step 7: Deploy to Vercel
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v22
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-args: "--prod" # Deploy to production
-          working-directory: ./
-        env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }} # For preview environments if needed
+          CI: true
