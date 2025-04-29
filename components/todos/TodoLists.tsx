@@ -12,11 +12,16 @@ export default function TodoLists({ todos }: TodosProps) {
             </h1>
             <Card className="p-6 flex flex-col gap-4">
                 <CreateTodoForm />
-                <div className="flex flex-col gap-3">
-                    {todos.map((todo: Todo) => (
-                        <TodoItem key={todo.id} todo={todo} />
-                    ))}
-                </div>
+                {
+                    todos.length > 0 && (
+                        <div className="flex flex-col gap-2 max-h-[270px] overflow-y-auto">
+                            {todos.map((todo: Todo) => (
+                                <TodoItem key={todo.id} todo={todo} />
+                            ))}
+                        </div>
+                    )
+                }
+
             </Card>
         </div>
     )
