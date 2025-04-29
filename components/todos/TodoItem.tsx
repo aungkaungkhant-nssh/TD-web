@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TodoSchema, TodoSchemaType } from "@/types/todoSchema";
 import Button from "../ui/Button";
 import { deleteTodo, updateTodo } from "@/server/action/todos/todo";
+import { toast } from "sonner";
 
 export default function TodoItem({ todo }: TodoProps) {
 
@@ -16,8 +17,9 @@ export default function TodoItem({ todo }: TodoProps) {
     const handleComplete = () => {
         updateTodo({ ...todo, is_complete: !todo.is_complete });
     }
-    const handleDelete = () => {
-        deleteTodo({ id: todo.id })
+    const handleDelete = async () => {
+        await deleteTodo({ id: todo.id })
+        toast.success("Task successfully Deleted!");
     }
 
     const {

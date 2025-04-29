@@ -11,7 +11,7 @@ export default function CreateTodoForm() {
         reset,
         control,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<TodoSchemaType>({
         resolver: zodResolver(
             TodoSchema
@@ -43,7 +43,9 @@ export default function CreateTodoForm() {
                     )}
                 />
                 <Button type="submit" variant="primary" className="w-full my-3 px-4 py-2 font-medium text-sm rounded focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500">
-                    Add Task
+                    {
+                        isSubmitting ? ("Loading...") : ("Create Todo")
+                    }
                 </Button>
             </form>
         </>
